@@ -22,7 +22,7 @@ class Books(models.Model):
         verbose_name_plural = "Книги"
 
     title = models.CharField(verbose_name="Название", max_length=200)
-    description = models.CharField(verbose_name="Описание", max_length=1000)
+    description = models.TextField(verbose_name="Описание", max_length=2000)
     count_page = models.IntegerField(verbose_name="Страниц")
     author = models.ManyToManyField(Author, verbose_name="Автор")
     count_books = models.IntegerField(verbose_name="Количество книг")
@@ -40,10 +40,10 @@ class Reader(models.Model):
         # ordering = "created"
 
     name = models.CharField(verbose_name="Имя", max_length=20)
-    surname = models.CharField(verbose_name="Фамилия", max_length=20, unique=True)
-    telephone = models.BigIntegerField(verbose_name="Телефон")
+    surname = models.CharField(verbose_name="Фамилия", max_length=20)
+    telephone = models.BigIntegerField(verbose_name="Телефон", unique=True)
     status = models.BooleanField(verbose_name="Статус", default=True)
-    active_books = models.ManyToManyField(Books, verbose_name="Активные книги")
+    active_books = models.ManyToManyField(Books, verbose_name="Активные книги", blank=True)
     created = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     updated = models.DateTimeField(auto_now=True, verbose_name="Дата редактирования")
 
