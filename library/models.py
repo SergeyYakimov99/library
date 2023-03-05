@@ -7,7 +7,7 @@ class Author(models.Model):
         verbose_name_plural = "Авторы"
 
     name = models.CharField(verbose_name="Имя", max_length=20)
-    surname = models.CharField(verbose_name="Фамилия", max_length=20, unique=True)
+    surname = models.CharField(verbose_name="Фамилия", max_length=20)
     image = models.ImageField(verbose_name="Фото", upload_to='pictures/')
     created = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     updated = models.DateTimeField(auto_now=True, verbose_name="Дата редактирования")
@@ -23,7 +23,7 @@ class Books(models.Model):
 
     title = models.CharField(verbose_name="Название", max_length=200)
     description = models.TextField(verbose_name="Описание", max_length=2000)
-    count_page = models.IntegerField(verbose_name="Страниц")
+    count_page = models.IntegerField(verbose_name="Всего страниц")
     author = models.ManyToManyField(Author, verbose_name="Автор")
     count_books = models.IntegerField(verbose_name="Количество книг")
     created = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
@@ -31,6 +31,11 @@ class Books(models.Model):
 
     def __str__(self):
         return self.title
+
+    def display_authors(self):
+        return ', '.join([author.name + ' ' + author.surname for author in self.author.all()])
+
+    display_authors.short_description = 'Автор'
 
 
 class Reader(models.Model):
@@ -49,3 +54,8 @@ class Reader(models.Model):
 
     def __str__(self):
         return f"{self.name} {self.surname}"
+
+    def display_active_books(self):
+        return ', '.join([books.title for books in self.active_books.all()])
+
+    display_active_books.short_description = 'Активные книги'
