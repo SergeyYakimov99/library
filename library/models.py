@@ -1,5 +1,7 @@
 from django.db import models
 
+NULLABLE = {'blank': True, 'null': True}
+
 
 class Author(models.Model):
     class Meta:
@@ -24,7 +26,7 @@ class Books(models.Model):
     title = models.CharField(verbose_name="Название", max_length=200)
     description = models.TextField(verbose_name="Описание", max_length=2000)
     count_page = models.IntegerField(verbose_name="Всего страниц")
-    author = models.ManyToManyField(Author, verbose_name="Автор")
+    author = models.ForeignKey(Author, verbose_name="Автор", on_delete=models.CASCADE, null=True)
     count_books = models.IntegerField(verbose_name="Количество книг")
     created = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     updated = models.DateTimeField(auto_now=True, verbose_name="Дата редактирования")
@@ -32,10 +34,10 @@ class Books(models.Model):
     def __str__(self):
         return self.title
 
-    def display_authors(self):
-        return ', '.join([author.name + ' ' + author.surname for author in self.author.all()])
-
-    display_authors.short_description = 'Автор'
+    # def display_authors(self):
+    #     return ', '.join([author.name + ' ' + author.surname for author in self.author.all()])
+    #
+    # display_authors.short_description = 'Автор'
 
 
 class Reader(models.Model):
@@ -48,7 +50,7 @@ class Reader(models.Model):
     surname = models.CharField(verbose_name="Фамилия", max_length=20)
     telephone = models.BigIntegerField(verbose_name="Телефон", unique=True)
     status = models.BooleanField(verbose_name="Статус", default=True)
-    active_books = models.ManyToManyField(Books, verbose_name="Активные книги", blank=True)
+    active_books = models.ManyToManyField(Books, verbose_name="Активные книги", **NULLABLE)
     created = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     updated = models.DateTimeField(auto_now=True, verbose_name="Дата редактирования")
 
