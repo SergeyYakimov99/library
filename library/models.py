@@ -34,11 +34,6 @@ class Books(models.Model):
     def __str__(self):
         return self.title
 
-    # def display_authors(self):
-    #     return ', '.join([author.name + ' ' + author.surname for author in self.author.all()])
-    #
-    # display_authors.short_description = 'Автор'
-
 
 class Reader(models.Model):
     class Meta:
@@ -48,7 +43,7 @@ class Reader(models.Model):
 
     name = models.CharField(verbose_name="Имя", max_length=20)
     surname = models.CharField(verbose_name="Фамилия", max_length=20)
-    telephone = models.BigIntegerField(verbose_name="Телефон", unique=True)
+    telephone = models.BigIntegerField(verbose_name="Телефон")
     status = models.BooleanField(verbose_name="Статус", default=True)
     active_books = models.ManyToManyField(Books, verbose_name="Активные книги", **NULLABLE)
     created = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")

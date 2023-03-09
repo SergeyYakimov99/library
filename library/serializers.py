@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from rest_framework.exceptions import ValidationError
+#from rest_framework.exceptions import ValidationError
 
 from library.models import Reader, Books, Author
 
@@ -21,18 +21,24 @@ class PhoneValidator:
             raise serializers.ValidationError('номер должен начинаться на 7')
 
 
-class BooksValidator:
+class ReaderSerializer(serializers.ModelSerializer):
+    telephone = serializers.IntegerField(validators=[PhoneValidator()])
+    active_books = serializers.SlugRelatedField(queryset=Books.objects.all(), slug_field='title', many=True)
 
     def validate(self, attrs):
         if len(attrs['active_books']) > 3:
             raise serializers.ValidationError('Невозможно добавить более 3 книг')
         return attrs
 
+    def create(self, validated_data):
+        for book in validated_data['active_books']:
+            if book.count_books == 0:
+                raise serializers.ValidationError('Невозможно добавить книгу, нет в наличии')
 
-class ReaderSerializer(serializers.ModelSerializer):
-    telephone = serializers.IntegerField(validators=[PhoneValidator()])
-    active_books = serializers.SlugRelatedField(queryset=Books.objects.all(), slug_field='title', many=True,
-                                                validators=[BooksValidator()])
+    def update(self, instance, validated_data):
+        for book in validated_data['active_books']:
+            if book.count_books == 0:
+                raise serializers.ValidationError('Невозможно добавить книгу, нет в наличии')
 
     class Meta:
         model = Reader
