@@ -1,5 +1,4 @@
 from rest_framework import serializers
-#from rest_framework.exceptions import ValidationError
 
 from library.models import Reader, Books, Author
 
@@ -14,6 +13,9 @@ class Count_pageValidator:
 class PhoneValidator:
 
     def __call__(self, value):
+        rez = Reader.objects.all().filter(telephone=value)
+        if rez:
+            raise serializers.ValidationError('данный телефон уже используется, введите другой номер')
         value = str(value)
         if len(value) != 11:
             raise serializers.ValidationError('номер должен состоять из 11 цифр')
@@ -33,12 +35,14 @@ class ReaderSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         for book in validated_data['active_books']:
             if book.count_books == 0:
-                raise serializers.ValidationError('Невозможно добавить книгу, нет в наличии')
+                raise serializers.ValidationError(f'Невозможно добавить книгу "{book.title}", нет в наличии!')
+        return super().create(validated_data)
 
     def update(self, instance, validated_data):
         for book in validated_data['active_books']:
             if book.count_books == 0:
-                raise serializers.ValidationError('Невозможно добавить книгу, нет в наличии')
+                raise serializers.ValidationError(f'Невозможно добавить книгу "{book.title}", нет в наличии!')
+        return super().update(instance, validated_data)
 
     class Meta:
         model = Reader

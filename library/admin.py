@@ -3,7 +3,7 @@ from django.db.models import QuerySet
 from django.urls import reverse
 from django.utils.html import format_html
 
-from library.models import Reader, Books, Author, NULLABLE
+from library.models import Reader, Books, Author
 
 
 class BooksAdmin(admin.ModelAdmin):

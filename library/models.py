@@ -1,6 +1,6 @@
 from django.db import models
 
-NULLABLE = {'blank': True, 'null': True}
+#NULLABLE = {'blank': True, 'null': True}
 
 
 class Author(models.Model):
@@ -43,9 +43,9 @@ class Reader(models.Model):
 
     name = models.CharField(verbose_name="Имя", max_length=20)
     surname = models.CharField(verbose_name="Фамилия", max_length=20)
-    telephone = models.BigIntegerField(verbose_name="Телефон")
+    telephone = models.BigIntegerField(verbose_name="Телефон", unique=True)
     status = models.BooleanField(verbose_name="Статус", default=True)
-    active_books = models.ManyToManyField(Books, verbose_name="Активные книги", **NULLABLE)
+    active_books = models.ManyToManyField(Books, verbose_name="Активные книги")
     created = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     updated = models.DateTimeField(auto_now=True, verbose_name="Дата редактирования")
 
