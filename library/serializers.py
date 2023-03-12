@@ -33,10 +33,16 @@ class ReaderSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
-        for book in validated_data['active_books']:
-            if book.count_books == 0:
-                raise serializers.ValidationError(f'Невозможно добавить книгу "{book.title}", нет в наличии!')
-        return super().create(validated_data)
+        reader = super().create(validated_data)
+        reader.set_password(reader.password)
+        reader.save()
+
+        return reader
+
+        # for book in validated_data['active_books']:
+        #     if book.count_books == 0:
+        #         raise serializers.ValidationError(f'Невозможно добавить книгу "{book.title}", нет в наличии!')
+        # return super().create(validated_data)
 
     def update(self, instance, validated_data):
         for book in validated_data['active_books']:

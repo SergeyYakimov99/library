@@ -24,10 +24,10 @@ class BooksAdmin(admin.ModelAdmin):
 
 
 class ReaderAdmin(admin.ModelAdmin):
-    list_display = ('name', 'surname', 'telephone', 'display_active_books', 'status', 'created')
+    list_display = ('first_name', 'last_name', 'telephone', 'email', 'display_active_books', 'status', 'created')
     list_filter = ('status',)
-    search_fields = ('surname',)
-    list_display_links = ('surname',)
+    search_fields = ('last_name',)
+    list_display_links = ('email',)
     actions = ['updated_status', 'deleted_books']
 
     @admin.action(description='Изменить статус читателя')
