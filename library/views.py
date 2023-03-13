@@ -1,9 +1,9 @@
 
-from rest_framework.permissions import IsAdminUser, AllowAny, IsAuthenticated
+from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework.viewsets import ModelViewSet
 
 from library.models import Reader, Author, Books
-from library.permissions import PermissionPolicyMixin
+from library.permissions import PermissionPolicyMixin, OnlyReader
 from library.serializers import BooksSerializer, ReaderSerializer, AuthorSerializer
 
 
@@ -17,7 +17,7 @@ class BooksViewSet(PermissionPolicyMixin, ModelViewSet):
         'create': [IsAdminUser],
         'retrieve': [AllowAny],
         'update': [IsAdminUser],
-        'delete': [IsAdminUser],
+        'destroy': [IsAdminUser],
     }
 
 
@@ -25,10 +25,10 @@ class ReaderViewSet(PermissionPolicyMixin, ModelViewSet):
     queryset = Reader.objects.all()
     serializer_class = ReaderSerializer
     permission_classes_per_method = {
-        'create': [IsAdminUser],
-        'retrieve': [IsAdminUser | IsAuthenticated],
-        'update': [IsAdminUser | IsAuthenticated],
-        'delete': [IsAdminUser | IsAuthenticated],
+        'create': [AllowAny],
+        'retrieve': [IsAdminUser | OnlyReader],
+        'update': [IsAdminUser | OnlyReader],
+        'destroy': [IsAdminUser | OnlyReader],
     }
 
 
@@ -39,5 +39,5 @@ class AuthorViewSet(PermissionPolicyMixin, ModelViewSet):
         'create': [IsAdminUser],
         'retrieve': [AllowAny],
         'update': [IsAdminUser],
-        'delete': [IsAdminUser],
+        'destroy': [IsAdminUser],
     }
