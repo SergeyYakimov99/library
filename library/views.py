@@ -26,9 +26,9 @@ class ReaderViewSet(PermissionPolicyMixin, ModelViewSet):
     serializer_class = ReaderSerializer
     permission_classes_per_method = {
         'create': [AllowAny],
-        'retrieve': [IsAdminUser | OnlyReader],
-        'update': [IsAdminUser | OnlyReader],
-        'destroy': [IsAdminUser | OnlyReader],
+        'retrieve': [OnlyReader],
+        'update': [OnlyReader],
+        'destroy': [OnlyReader],
     }
 
 
